@@ -1,28 +1,25 @@
-se an official Maven image to build the Spring Boot app
-FROM maven:3.9.6-eclipse-temurin-21 AS build
 
-# Set the working directory
+# ---------- Stage 1: Build ----------
+FROM maven:3.9-eclipse-temurin-17 AS build
 WORKDIR /app
 
-# Copy the pom.xml and install dependencies
+# Cache dependencies first (faster rebuilds)
 COPY pom.xml .
-RUN mvn dependency:go-offline
+RUN mvn dependency:go-offline -B
 
-# Copy the source code and build the application
+# Copy source and build the JAR
 COPY src ./src
 RUN mvn clean package -DskipTests
 
-# Use an official OpenJDK image to run the application
-FROM eclipse-temurin:21-jdk-jammy
-
-# Set the working directory
+# ---------- Stage 2: Run ----------
+FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
-# Copy the built JAR file from the build stage
-COPY --from=build /app/target/backend-demo-deploy-0.0.1-SNAPSHOT.jar .
+# Run as non-root user
+RUN addgroup -S spring && adduser -S spring -G spring
+USER spring
 
-# Expose port 8080
+COPY --from=build /app/target/*.jar app.jar
+
 EXPOSE 8080
-
-# Specify the command to run the application
-ENTRYPOINT ["java", "-jar", "/app/backend-demo-deploy-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
