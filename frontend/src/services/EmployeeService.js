@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = 'https://fullstack-employee-management-system-psi0.onrender.com/api/employees';
+const REST_API_BASE_URL = 'https://fullstack-employee-management-system-psi0.onrender.com/api/employees';
 
 export const listEmployees = () => axios.get(API_BASE_URL);
 
