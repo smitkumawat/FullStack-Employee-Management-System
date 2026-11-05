@@ -2,12 +2,8 @@ package net.javasmit.ems.controller;
 
 import lombok.AllArgsConstructor;
 import net.javasmit.ems.dto.EmployeeDto;
-import net.javasmit.ems.entity.Employee;
 import net.javasmit.ems.service.EmployeeService;
-import org.apache.coyote.Response;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,10 +17,8 @@ public class EmployeeController {
 
      private EmployeeService employeeService;
 
-
-
-     //build add Employee Rest api
-    @PostMapping("/save")
+     //build add Employee Rest api (supports both /api/employees and /api/employees/save)
+    @PostMapping({"", "/save"})
     public ResponseEntity<EmployeeDto> createEmployee (@RequestBody EmployeeDto employeeDto){
        EmployeeDto savedEmployee =  employeeService.createEmployee(employeeDto);
     return  new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
