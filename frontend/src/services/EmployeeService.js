@@ -4,7 +4,7 @@ const API_BASE_URL = 'https://fullstack-employee-management-system-psi0.onrender
 
 export const listEmployees = () => axios.get(API_BASE_URL);
 
-export const createEmployee = (employee) => axios.post(API_BASE_URL, employee);
+export const createEmployee = (employee) => axios.post(`${API_BASE_URL}/save`, employee);
 
 export const getEmployee = (employeeId) => axios.get(API_BASE_URL + '/' + employeeId);
 
